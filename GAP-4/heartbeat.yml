@@ -1,0 +1,22 @@
+name: otus_heartbeat
+tags: ["web", "production"]
+output.elasticsearch:
+  hosts: ["localhost:9200"]
+
+heartbeat.monitors:
+
+- type: http
+  id: otus_check
+  name: "Otus Check"
+  schedule: '@every 10s'
+  urls: ["https://otus.ru"]
+  check.response.status: 200
+  check.response.body: "OK"
+
+- type: http
+  id: google_check
+  name: "Google Check"
+  schedule: '@every 10s'
+  urls: ["https://www.google.com"]
+  check.response.status: 200
+  check.response.body: "OK"

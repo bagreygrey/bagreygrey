@@ -1,0 +1,9 @@
+filebeat.inputs:
+- type: log
+  paths:
+    - /var/log/auth.log
+  fields:
+    log_type: ssh
+
+output.elasticsearch:
+  hosts: ["localhost:9200"]

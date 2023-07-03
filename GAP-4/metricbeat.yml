@@ -1,0 +1,11 @@
+name: otus_metricbeat
+tags: ["production"]
+output.elasticsearch:
+  hosts: ["localhost:9200"]
+  
+metricbeat.modules:
+
+- module: system
+  metricsets: ["cpu", "memory", "filesystem"]
+  enabled: true
+  period: 10s
