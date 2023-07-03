@@ -251,3 +251,76 @@ receivers:
 cd /opt/cms_stack && docker-compose up -d
 cd /opt/prometheus_stack && dockerp-compose up -d
 
+
+
+
+
+
+
+
+
+
+1. Установка grafana:
+
+mkdir /opt/grafana
+
+vi /opt/grafana/docker-compose.yml
+
+version: '3'
+services:
+  grafana:
+    image: grafana/grafana
+    ports:
+      - 3000:3000
+    volumes:
+      - grafana_data:/var/lib/grafana
+volumes:
+  grafana_data:
+  
+
+2. Запуск:
+
+cd /opt/grafana && docker-compose up -d
+
+
+3. Создание директорий infra и app:
+
+mkdir /opt/grafana/{infra,app}
+
+
+4. Создал новый дашборд, нажав на значок "Create" в левой панели навигации, затем "Dashboard"
+
+
+5. На странице создания дашборда нажал "Add Query" 
+
+
+6. В поле "Query" выберал Prometheus
+
+
+7. Запрос для получения информации о загрузке процессора:
+
+100 - (avg by (instance) (irate(node_cpu_seconds_total{mode="idle"}[5m])) * 100)
+
+
+8. Запрос для получения информации о загрузке памяти:
+
+100 - (node_memory_MemAvailable_bytes / node_memory_MemTotal_bytes) * 100
+
+
+9. Запрос для получения информации о загрузке сети:
+irate(node_network_receive_bytes_total[5m]) + irate(node_network_transmit_bytes_total[5m])
+
+
+10. Запрос проверки доступности Nginx:
+
+up{job="nginx"}
+
+
+11. Запрос проверки доступности PostgreSQL:
+
+up{job="postgresql"}
+
+
+12. Запрос для отображения времени ответа PostgreSQL:
+
+postgresql_exporter_pg_stat_database_avg_time_seconds
