@@ -1,0 +1,31 @@
+global:
+  resolve_timeout: 5m
+  receiver: telegram
+
+route:
+  group_by: ['alertname']
+  group_wait: 10s
+  group_interval: 5m
+  repeat_interval: 1h
+  receiver: telegram
+  routes:
+    - match:
+        alertname: 'NginxDown'
+      receiver: 'critical-telegram'
+    - match:
+        alertname: 'PHPFpmDown'
+      receiver: 'critical-telegram'
+    - match:
+        alertname: 'PostgresDown'
+      receiver: 'critical-telegram'
+
+receivers:
+- name: critical-telegram
+  webhook_configs:
+  - url: 'https://api.telegram.org/bot6107835046:AAFJ75V6D0ndZKv0Z0Cejfkz7VVCfiTvDXU/sendMessage'
+    send_resolved: true
+    http_config:
+      bearer_token: 'prom_tg_bot'
+    message: '{{ .CommonAnnotations.summary }}'
+    chat_id: 'prom_tg_bot'
+    level: 'critical'
